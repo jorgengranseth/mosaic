@@ -87,7 +87,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
                 for point in zip(
                     x_float, y_float, z_float, points.intensity, points.return_number, points.number_of_returns,
                     points.scan_direction_flag, points.edge_of_flight_line, points.classification, points.synthetic,
-                    points.key_point, points.withheld, points.scan_angle_rank, points.user_data, points.point_source_id,
+                    points.key_point, points.withheld, points.scan_angle, points.user_data, points.point_source_id,
                     gps_time, red, green, blue
                 ):
                     yield point
@@ -147,7 +147,7 @@ class LASToGeometryDataSource(DataSource):
             StructField("synthetic", ByteType(), True),
             StructField("key_point", ByteType(), True),
             StructField("withheld", ByteType(), True),
-            StructField("scan_angle_rank", ByteType(), True),
+            StructField("scan_angle", ByteType(), True),
             StructField("user_data", ByteType(), True),
             StructField("point_source_id", ShortType(), True),
             StructField("gps_time", DoubleType(), True),
