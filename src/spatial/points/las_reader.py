@@ -138,7 +138,7 @@ class LASToGeometryDataSource(DataSource):
             StructField("x", FloatType(), True),
             StructField("y", FloatType(), True),
             StructField("z", FloatType(), True),
-            StructField("intensity", ShortType(), True),
+            StructField("intensity", IntegerType(), True),
             StructField("return_number", ShortType(), True),
             StructField("number_of_returns", ShortType(), True),
             StructField("scan_direction_flag", ByteType(), True),
