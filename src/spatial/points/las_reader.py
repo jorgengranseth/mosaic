@@ -147,7 +147,7 @@ class LASToGeometryDataSource(DataSource):
             StructField("synthetic", ByteType(), True),
             StructField("key_point", ByteType(), True),
             StructField("withheld", ByteType(), True),
-            StructField("scan_angle", ByteType(), True),
+            StructField("scan_angle", ShortType(), True),
             StructField("user_data", ByteType(), True),
             StructField("point_source_id", ShortType(), True),
             StructField("gps_time", DoubleType(), True),
