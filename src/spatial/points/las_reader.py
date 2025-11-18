@@ -143,7 +143,7 @@ class LASToGeometryDataSource(DataSource):
             StructField("number_of_returns", ShortType(), True),
             StructField("scan_direction_flag", ByteType(), True),
             StructField("edge_of_flight_line", ByteType(), True),
-            StructField("classification", ByteType(), True),
+            StructField("classification", ShortType(), True),
             StructField("synthetic", ByteType(), True),
             StructField("key_point", ByteType(), True),
             StructField("withheld", ByteType(), True),
