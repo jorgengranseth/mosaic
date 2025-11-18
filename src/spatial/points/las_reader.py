@@ -126,7 +126,7 @@ class LASToGeometryDataSource(DataSource):
             - synthetic:
             - key_point:
             - withheld:
-            - scan_angle_rank: valid range from -90 to +90. The Scan Angle Rank is the angle (rounded to the nearest integer in the absolute value sense) at which the laser point was output from the laser system including the roll of the aircraft.  
+            - scan_angle: valid range from -90 to +90. The Scan Angle Rank is the angle (rounded to the nearest integer in the absolute value sense) at which the laser point was output from the laser system including the roll of the aircraft.
             - user_data: additional information about the point
             - point_source_id: This value indicates the file from which this point originated.
             - gps_time:  double floating point time tag value at which the point was acquired
