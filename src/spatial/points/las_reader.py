@@ -73,7 +73,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
         self.chunk_count = 0
 
         # TODO: process files in a directory (for now supports only file)
-
+        print(f"Open file with laspy, {chunk_size}")
         with laspy.open(input_path) as f:
 
             # TODO: test performance of using scaled coords vs calculating them on the fly
