@@ -78,6 +78,10 @@ class LASToGeometryDataSourceReader(DataSourceReader):
         self.logger.info(f"Open file with laspy, {chunk_size}")
         with laspy.open(input_path) as f:
             self.logger.info(f"File opened; LAS version {f.header.version}")
+            if f.header.version.major != 1:
+                raise NotImplementedError("LAS versions other than 1.x not supported")
+
+            version_1_4_or_greater = f.header.version.minor == 4
 
             # TODO: test performance of using scaled coords vs calculating them on the fly
 
@@ -96,7 +100,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
                 for point in zip(
                     x_float, y_float, z_float, points.intensity, points.return_number, points.number_of_returns,
                     points.scan_direction_flag, points.edge_of_flight_line, points.classification, points.synthetic,
-                    points.key_point, points.withheld, points.scan_angle, points.user_data, points.point_source_id,
+                    points.key_point, points.withheld, points.scan_angle if version_1_4_or_greater else points.scan_angle_rank, points.user_data, points.point_source_id,
                     gps_time, red, green, blue
                 ):
                     yield point
@@ -116,7 +120,7 @@ class LASToGeometryDataSource(DataSource):
         """
         return "las"
 
-    def schema(self, version: laspy.header.Version=laspy.header.Version(1, 4)) -> StructType:
+    def schema(self) -> StructType:
         """
         Define the schema for the output data.
         The schema includes fields present in point format 3.
@@ -143,12 +147,6 @@ class LASToGeometryDataSource(DataSource):
             - green: The Green image channel value associated with this point 
             - blue: The Blue image channel value associated with this point 
         """
-        if version.major != 1:
-            raise NotImplementedError("LAS major version other than 1 not supported")
-
-        las14 = version.minor >= 4
-
-
         return StructType([
             StructField("x", FloatType(), True),
             StructField("y", FloatType(), True),
@@ -162,7 +160,8 @@ class LASToGeometryDataSource(DataSource):
             StructField("synthetic", ByteType(), True),
             StructField("key_point", ByteType(), True),
             StructField("withheld", ByteType(), True),
-            StructField("scan_angle", ShortType(), True) if las14 else StructField("scan_angle_rank", ShortType(), True),
+            StructField("scan_angle", ShortType(), True),
+            StructField("scan_angle_rank", ShortType(), True),
             StructField("user_data", ShortType(), True),
             StructField("point_source_id", IntegerType(), True),
             StructField("gps_time", DoubleType(), True),
