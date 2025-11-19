@@ -4,6 +4,7 @@ import laspy
 import numpy as np
 from typing import Generator, Optional, Tuple, Dict
 import os
+import logging
 
 try:
     from pyspark.sql.datasource import DataSource, DataSourceReader
@@ -41,10 +42,11 @@ class LASToGeometryDataSourceReader(DataSourceReader):
             schema (StructType): The schema of the output data.
             options (dict): Options to configure the data reader, such as file path and filters.
         """
-        print("Init LASToGeometryDataSourceReader")
         self.schema: StructType = schema
         self.options: dict = options
         self.chunk_count = 0
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("Init LASToGeometryDataSourceReader")
 
     def check_directory(directory_path):
         if os.path.isdir(directory_path):
@@ -62,7 +64,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
         Yields:
             tuple: A tuple containing the point's data
         """
-        print("Start LASToGeometryDataSourceReader.read")
+        self.logger.info("Start LASToGeometryDataSourceReader.read")
 
         # Extract options
         input_path: str = self.options.get("path")
@@ -73,14 +75,14 @@ class LASToGeometryDataSourceReader(DataSourceReader):
         self.chunk_count = 0
 
         # TODO: process files in a directory (for now supports only file)
-        print(f"Open file with laspy, {chunk_size}")
+        self.logger.info(f"Open file with laspy, {chunk_size}")
         with laspy.open(input_path) as f:
-            print("File opened")
+            self.logger.info("File opened")
 
             # TODO: test performance of using scaled coords vs calculating them on the fly
 
             for points in f.chunk_iterator(chunk_size):
-                print(f"Reading chunk {self.chunk_count}")
+                self.logger.info(f"Reading chunk {self.chunk_count}")
                 x_float = np.array(points.x).astype(float)
                 y_float = np.array(points.y).astype(float)
                 z_float = np.array(points.z).astype(float)
@@ -97,7 +99,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
                     points.key_point, points.withheld, points.scan_angle, points.user_data, points.point_source_id,
                     gps_time, red, green, blue
                 ):
-                    print(f"Chunk {self.chunk_count} read")
+                    self.logger.info(f"Chunk {self.chunk_count} read")
                     yield point
 
 class LASToGeometryDataSource(DataSource):
