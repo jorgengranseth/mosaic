@@ -99,7 +99,6 @@ class LASToGeometryDataSourceReader(DataSourceReader):
                     points.key_point, points.withheld, points.scan_angle, points.user_data, points.point_source_id,
                     gps_time, red, green, blue
                 ):
-                    self.logger.info(f"Chunk {self.chunk_count} read")
                     yield point
 
 class LASToGeometryDataSource(DataSource):
