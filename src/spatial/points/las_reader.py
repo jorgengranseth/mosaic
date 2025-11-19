@@ -71,7 +71,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
         if not input_path:
             raise ValueError("The 'path' option is required.")
 
-        chunk_size: int = self.options.get("chunkSize", 1000000)
+        chunk_size: int = int(self.options.get("chunkSize", 1000000))
         self.chunk_count = 0
 
         # TODO: process files in a directory (for now supports only file)
