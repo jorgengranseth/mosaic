@@ -43,6 +43,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
         """
         self.schema: StructType = schema
         self.options: dict = options
+        self.chunk_count = 0
 
     def check_directory(directory_path):
         if os.path.isdir(directory_path):
@@ -66,6 +67,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
             raise ValueError("The 'path' option is required.")
 
         chunk_size: int = self.options.get("chunkSize", 1000000)
+        self.chunk_count = 0
 
         # TODO: process files in a directory (for now supports only file)
 
@@ -74,6 +76,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
             # TODO: test performance of using scaled coords vs calculating them on the fly
 
             for points in f.chunk_iterator(chunk_size):
+                print(f"Reading chunk {self.chunk_count}")
                 x_float = np.array(points.x).astype(float)
                 y_float = np.array(points.y).astype(float)
                 z_float = np.array(points.z).astype(float)
@@ -90,6 +93,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
                     points.key_point, points.withheld, points.scan_angle, points.user_data, points.point_source_id,
                     gps_time, red, green, blue
                 ):
+                    print(f"Chunk {self.chunk_count} read")
                     yield point
 
 class LASToGeometryDataSource(DataSource):
