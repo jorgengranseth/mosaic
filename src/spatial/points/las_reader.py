@@ -41,6 +41,7 @@ class LASToGeometryDataSourceReader(DataSourceReader):
             schema (StructType): The schema of the output data.
             options (dict): Options to configure the data reader, such as file path and filters.
         """
+        print("Init LASToGeometryDataSourceReader")
         self.schema: StructType = schema
         self.options: dict = options
         self.chunk_count = 0
@@ -61,6 +62,8 @@ class LASToGeometryDataSourceReader(DataSourceReader):
         Yields:
             tuple: A tuple containing the point's data
         """
+        print("Start LASToGeometryDataSourceReader.read")
+
         # Extract options
         input_path: str = self.options.get("path")
         if not input_path:
